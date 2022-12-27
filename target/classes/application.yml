@@ -1,0 +1,42 @@
+server:
+  port: 8086
+  servlet:
+    context-path: /
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/post_work?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+    username: root
+    password: root
+
+  thymeleaf:
+    cache: false
+    mode: HTML5
+    encoding: UTF-8
+
+  mvc:
+    static-path-pattern: /static/**
+  resources:
+    static-locations: classpath:/static/
+
+  # 文件上传
+  servlet:
+    multipart:
+      # 设置单个文件最大内存
+      max-file-size: 20MB
+      # 单次请求的文件最大内存
+      max-request-size: 100MB
+# 自定义文件上传路径
+web:
+  upload-path: D:/upload/
+
+# Mybatis-plus配置
+mybatis-plus:
+  configuration:
+    # sql日志的打印
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 自动驼峰命名
+    map-underscore-to-camel-case: true
+    # map 映射value为null的情况
+    call-setters-on-nulls: true
