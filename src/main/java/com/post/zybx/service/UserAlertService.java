@@ -2,8 +2,10 @@ package com.post.zybx.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.post.zybx.bean.UserAlert;
+import com.post.zybx.dto.CommonPage;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * create by Luler on 2022/12/26 15:55
@@ -12,14 +14,17 @@ import java.util.List;
  */
 public interface UserAlertService {
 
-    List<UserAlert> findAllVo();
+    Integer selectCount();
+
+    List<UserAlert> findAllList();
 
     /**
      * 分页查询
-     * @param current 当前页
-     * @param size 每页显示条数
+     * @param myPage 自定义对象
      * @return Page对象
      */
-    Page<UserAlert> findPageVo(long current, long size);
+    Page<UserAlert> findPageVo(CommonPage myPage);
 
+
+    Page<UserAlert> findPageByMap(CommonPage myPage, Map<String, Object> map);
 }

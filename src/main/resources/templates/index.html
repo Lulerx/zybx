@@ -19,8 +19,9 @@
         </div>
         <div style="margin: 0 0 0 3%">
             <div class="layui-btn-container">
-                <button type="button" class="layui-btn  layui-btn-normal" id="test8">选择文件</button>
-                <button type="button" class="layui-btn " id="test9">开始上传</button>
+                <button type="button" class="layui-btn  layui-btn-normal" id="test8">选择Excel文件</button>
+                <button type="button" class="layui-btn " id="test9">开始导入</button>
+<!--                <button type="button" class="layui-btn " id="export">导出文件</button>-->
             </div>
         </div>
         <div style="margin: 0 3%;">
@@ -35,15 +36,20 @@
 
 </div>
 <script type="text/html" id="toolbarDemo">
-    <div class="layui-btn-container">
+    <!--<div class="layui-btn-container">
         <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
-    </div>
+    </div>-->
 </script>
 <script src="../static/layui/layui.js"></script>
 <script src="../static/js/jquery-3.3.1.min.js"></script>
 <script src="../static/js/public.js"></script>
 
 <script type="text/javascript" th:inline="none">
+
+    $("#export").click(function () {
+        location.href = "/tbUser/downloadFailedUsingJson";
+    });
+
     //JS
     layui.use(['element', 'layer', 'util', 'table', 'upload'], function () {
         var element = layui.element
@@ -102,9 +108,9 @@
                     "data": res.data.records //解析数据列表
                 };
             }
-            , limits: [10, 20, 50, 100]
+            , limits: [10, 20, 50, 100, 300]
             , request: {
-                pageName: 'curr' //页码的参数名称，默认：page
+                pageName: 'current' //页码的参数名称，默认：page
                 , limitName: 'size' //每页数据量的参数名，默认：limit
             }
             , page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
@@ -118,21 +124,24 @@
             , cols: [[
                 {field: 'uid', width: 80, title: 'ID', sort: true}
                 , {field: 'orderNum', width: 150, title: '保单号'}
-                , {field: 'email', width: 120, title: '邮箱', sort: true}
+                , {field: 'email', width: 150, title: '邮箱', sort: true}
                 , {field: 'phone', width: 150, title: '手机号'}
                 , {field: 'sex', title: '性别', width: 80}
                 , {field: 'age', width: 80, title: '年龄'}
                 , {field: 'jobTitle', width: 80, title: '职业名称', sort: true}
                 , {field: 'nationality', width: 80, title: '国籍'}
                 , {field: 'idtype', width: 135, title: '证件类型', sort: true}
-                , {field: 'idcard', minWidth: 150, title: '证件号码'}
+                , {field: 'idcard', minWidth: 180, title: '证件号码'}
                 , {field: 'address', width: 135, title: '地址'}
-                , {field: 'dept', width: 135, title: '所属机构'}
-                , {field: 'branch', width: 135, title: '网点'}
+                , {field: 'deptName', width: 135, title: '所属机构'}
+                , {field: 'branchName', width: 135, title: '网点'}
                 , {field: 'startDate', width: 135, title: '承保时间', sort: true}
-                , {field: 'updateTime', width: 135, title: '最后更新时间', sort: true}
+                , {field: 'updateTime', width: 180, title: '最后执行时间', sort: true}
             ]]
         });
+
+        //将上述表格示例导出为 csv 文件
+        table.exportFile(ins1.config.id, data);
 
         //头工具栏事件
         table.on('toolbar(table_alert)', function (obj) {

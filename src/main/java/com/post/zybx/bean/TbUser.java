@@ -1,10 +1,12 @@
 package com.post.zybx.bean;
 
+import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,25 +23,27 @@ import java.util.Date;
 @NoArgsConstructor
 @TableName("tb_user")
 public class TbUser {
+    @ExcelIgnore
     @TableId(type = IdType.AUTO,value = "uid")
     private Integer uid;
     @ExcelProperty(value = "所属机构代码")
     private String deptId;
     //所属机构
     @ExcelProperty(value = "所属机构")
-    private String dept;
+    private String deptName;
     @ExcelProperty(value = "网点代码")
     private String branchId;
     @ExcelProperty(value = "网点名称")
-    private String branch;
+    private String branchName;
     @ExcelProperty(value = "保单号")
     private String orderNum;
     @ExcelProperty(value = "电子邮件地址")
     private String email;
     @ExcelProperty(value = "手机号码")
     private String phone;
-    //    @ExcelProperty(value = "性别")
-//    private String sex;
+//    @ExcelProperty(value = "性别")
+    @ExcelIgnore
+    private String sex;
     @ExcelProperty(value = "投保人年龄")
     private Integer age;
     @ExcelProperty(value = "职业名称")
@@ -56,6 +60,8 @@ public class TbUser {
     private String address;
     @ExcelProperty(value = "承保日期")
     private String startDate;
+    @ExcelIgnore
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="Asia/Shanghai")
     private Date updateTime;
 
 }

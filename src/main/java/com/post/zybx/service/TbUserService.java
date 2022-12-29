@@ -3,6 +3,7 @@ package com.post.zybx.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.post.zybx.bean.TbUser;
+import com.post.zybx.dto.CommonPage;
 
 import java.util.List;
 
@@ -13,13 +14,14 @@ import java.util.List;
  */
 public interface TbUserService extends IService<TbUser> {
 
+    List<TbUser> findAllList();
+
     /**
      * 分页查询
-     * @param current 当前页
-     * @param size 每页显示条数
+     * @param myPage MyPage对象
      * @return Page对象
      */
-    Page<TbUser> findPageVo(long current, long size);
+    Page<TbUser> findPageVo(CommonPage myPage);
 
     int insertVo(TbUser tbUser);
 

@@ -3,11 +3,11 @@ package com.post.zybx.service.impl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.post.zybx.bean.TbUser;
+import com.post.zybx.dto.CommonPage;
 import com.post.zybx.mapper.TbUserMapper;
 import com.post.zybx.service.TbUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -25,12 +25,16 @@ public class TbUserServiceImpl extends ServiceImpl<TbUserMapper, TbUser> impleme
     @Resource
     private TbUserMapper tbUserMapper;
 
-    @Resource
-    private JdbcTemplate jdbcTemplate;
 
     @Override
-    public Page<TbUser> findPageVo(long current, long size) {
-        Page<TbUser> page = new Page<>(current, size);
+    public List<TbUser> findAllList() {
+        List<TbUser> list = tbUserMapper.selectList(null);
+        return list;
+    }
+
+    @Override
+    public Page<TbUser> findPageVo(CommonPage myPage) {
+        Page<TbUser> page = new Page<>(myPage.getCurrent(), myPage.getSize());
         Page<TbUser> tbUserPage = tbUserMapper.selectPage(page, null);
         return tbUserPage;
     }

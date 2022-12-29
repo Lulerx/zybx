@@ -10,8 +10,6 @@ public class CommonResult<T> {
     private Integer status;
     private String msg;
 
-    public CommonResult() {
-    }
 
     public CommonResult(T data, Integer status, String msg) {
         Data = data;

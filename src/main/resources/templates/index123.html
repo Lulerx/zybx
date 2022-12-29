@@ -10,7 +10,64 @@
     <!-- 内容主体区域 -->
     <div class="layui-body">
 
-        <div style="padding: 15px;">导入导出、搜索功能区域</div>
+        <div style="padding: 15px;">
+            <span class="layui-breadcrumb">
+              <a href="/">首页</a>
+              <a><cite>预警数据展示</cite></a>
+            </span>
+        </div>
+
+        <div style="margin: 0 0 0 3%">
+            <form class="layui-form layui-form-pane" action="">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">手机号码</label>
+                        <div class="layui-input-inline">
+                            <!--注意此处input标签里的id-->
+                            <input class="layui-input" name="phoneNo" id="phoneNo" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">电子邮箱</label>
+                        <div class="layui-input-inline">
+                            <!--注意此处input标签里的id-->
+                            <input class="layui-input" name="email" id="email" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">证件号码</label>
+                        <div class="layui-input-inline">
+                            <!--注意此处input标签里的id-->
+                            <input class="layui-input" name="cards" id="cards" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">预警模型</label>
+                        <div class="layui-input-block">
+                            <select name="modelId" id="modelId" lay-filter="aihao">
+                                <option value="0" elected="">全部模型</option>
+                                <option value="1001">手机号相同</option>
+                                <option value="1002">电子邮件重复</option>
+                                <option value="1003">年龄异常模型</option>
+                                <option value="1004">证件类型异常</option>
+                                <option value="1005">地址异常</option>
+                                <option value="1006">地址相同</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <!--注意此处button标签里的type属性-->
+                        <button type="button" id="search-btn" class="layui-btn layui-btn-primary"  lay-submit data-type="reload" lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div style="margin: 0 0 0 3%">
+            <div class="layui-btn-container">
+                <button type="button" class="layui-btn " id="export">导出全部数据</button>
+            </div>
+        </div>
         <div style="margin: 0 3%;">
             <table id="table_alert" lay-filter="test"></table>
 
@@ -23,15 +80,19 @@
 
 </div>
 <script type="text/html" id="toolbarDemo">
-    <div class="layui-btn-container">
+    <!--<div class="layui-btn-container">
         <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
-    </div>
+    </div> -->
 </script>
 <script src="../static/layui/layui.js"></script>
 <script src="../static/js/jquery-3.3.1.min.js"></script>
 <script src="../static/js/public.js"></script>
 
 <script type="text/javascript"  th:inline="none">
+
+    $("#export").click(function () {
+        location.href = "/alertData/download";
+    });
 
     //JS
     layui.use(['element', 'layer', 'util','table'], function(){
@@ -59,11 +120,13 @@
             }
         });
 
-        var ins1 =  table.render({
+        //表格数据加载
+        table.render({
             elem: '#table_alert'
+            , id: 'testReload'
             ,url:'/alertData/list'
             ,toolbar: '#toolbarDemo'
-            ,height: 500
+            ,height: 550
             ,even: true
             ,parseData: function(res){ //res 即为原始返回的数据
                 return {
@@ -73,9 +136,9 @@
                     "data": res.data.records //解析数据列表
                 };
             }
-            ,limits: [10,20,50,100]
+            ,limits: [10,20,50,100,300]
             ,request: {
-                pageName: 'curr' //页码的参数名称，默认：page
+                pageName: 'current' //页码的参数名称，默认：page
                 ,limitName: 'size' //每页数据量的参数名，默认：limit
             }
             ,page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
@@ -98,11 +161,11 @@
                 ,{field:'idtype', width:135, title: '证件类型', sort: true}
                 ,{field:'idcard', minWidth:150, title: '证件号码'}
                 ,{field:'address', width:135, title: '地址'}
-                ,{field:'dept', width:135, title: '所属机构'}
-                ,{field:'branch', width:135, title: '网点'}
+                ,{field:'deptName', width:135, title: '所属机构'}
+                ,{field:'branchName', width:135, title: '网点'}
                 ,{field:'startDate', width:135, title: '承保时间', sort: true}
-                ,{field:'modelId', width:135, title: '模型ID'}
-                ,{field:'updateTime', width:135, title: '最后更新时间', sort: true}
+                ,{field:'modelId', width:80, title: '模型ID'}
+                ,{field:'updateTime', width:180, title: '预警生成时间', sort: true}
             ]]
         });
 
@@ -116,7 +179,33 @@
                     break;
             };
         });
+
+        $("#search-btn").click(function(){
+            var phoneNo = $('#phoneNo').val();
+            var email = $('#email').val();
+            var cards = $('#cards').val();
+            var modelId = $('#modelId').val();
+            table.reload('testReload', {
+                url: '/alertData/search'
+                // ,methods:"post"
+                ,request: {
+                    pageName: 'current' //当前页码的参数名称，默认：page
+                    ,limitName: 'size' //每页数据量的参数名，默认：limit
+                }
+                ,where: {
+                    phoneNo : phoneNo,
+                    email: email,
+                    cards: cards,
+                    modelId: modelId
+                }
+                ,page: {
+                    curr: 1
+                }
+            });
+        });
+
     });
+
 
 
 
