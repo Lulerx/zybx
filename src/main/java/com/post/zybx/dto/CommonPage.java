@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * create by Luler on 2022/12/28 11:50
  *
- * @description
+ * @description 分页实体类，用于jdbc自定义分页
  */
 @Data
 public class CommonPage<T> {

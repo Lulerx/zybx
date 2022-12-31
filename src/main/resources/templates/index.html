@@ -13,15 +13,14 @@
         <div style="padding: 15px;">
             <span class="layui-breadcrumb">
               <a href="/">首页</a>
-              <a href="/demo/">演示</a>
-              <a><cite>导航元素</cite></a>
+              <a><cite>数据展示</cite></a>
             </span>
         </div>
-        <div style="margin: 0 0 0 3%">
+        <div style="margin: 0 3%">
             <div class="layui-btn-container">
                 <button type="button" class="layui-btn  layui-btn-normal" id="test8">选择Excel文件</button>
                 <button type="button" class="layui-btn " id="test9">开始导入</button>
-<!--                <button type="button" class="layui-btn " id="export">导出文件</button>-->
+                <button type="button" class="layui-btn layui-btn-danger " id="export" style="float: right">执行预警筛选</button>
             </div>
         </div>
         <div style="margin: 0 3%;">
@@ -47,7 +46,20 @@
 <script type="text/javascript" th:inline="none">
 
     $("#export").click(function () {
-        location.href = "/tbUser/downloadFailedUsingJson";
+        //Confirm
+
+        layer.confirm('确定要生成预警数据？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            layer.msg('正在执行，请耐心等待~', {icon: 6,offset: '100px'});
+            //Loading
+            var index = layer.load(1, {shade: false}); //0代表加载的风格，支持0-2
+            //关闭Loading，一般在 Ajax 回调中执行
+            // layer.close(index);
+        }, function(){
+            layer.msg('已取消', {icon: 2});
+        });
+        console.log("执行存储过程");
     });
 
     //JS

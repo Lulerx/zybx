@@ -66,8 +66,8 @@ public class ExcelListener extends AnalysisEventListener<TbUser> {
      * 加上存储数据库
      */
     private void saveData() {
-        log.info("{}条数据，开始存储数据库！", cachedDataList.size());
+        log.info("====================={}条数据，开始存储数据库！", cachedDataList.size());
         tbUserService.inertListVo(cachedDataList);
-        log.info("存储数据库成功！");
+        log.info("=====================存储数据库成功！");
     }
 }

@@ -14,6 +14,8 @@ spring:
     cache: false
     mode: HTML5
     encoding: UTF-8
+    prefix:
+      classpath: /templates
 
   mvc:
     static-path-pattern: /static/**
