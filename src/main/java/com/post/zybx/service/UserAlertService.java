@@ -27,4 +27,9 @@ public interface UserAlertService {
 
 
     Page<UserAlert> findPageByMap(CommonPage myPage, Map<String, Object> map);
+
+    /**
+     * 对碰 status=0 和 status = 1 的数据，查询出已核销的数据并更 status
+     */
+    void alertCheck();
 }

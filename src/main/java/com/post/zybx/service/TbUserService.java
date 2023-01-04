@@ -14,6 +14,12 @@ import java.util.List;
  */
 public interface TbUserService extends IService<TbUser> {
 
+    /**
+     * 清空表数据
+     * @return
+     */
+    void deleteAll();
+
     List<TbUser> findAllList();
 
     /**
@@ -23,8 +29,23 @@ public interface TbUserService extends IService<TbUser> {
      */
     Page<TbUser> findPageVo(CommonPage myPage);
 
+    /**
+     * 插入单个对象数据
+     * @param tbUser 单个对象
+     * @return
+     */
     int insertVo(TbUser tbUser);
 
+    /**
+     * 批量插入对象
+     * @param users 对象列表
+     * @return
+     */
     int inertListVo(List<TbUser> users);
+
+    /**
+     * 生成预警数据，使用存储过程生成
+     */
+    void buildAlert();
 
 }

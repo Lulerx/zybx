@@ -8,6 +8,7 @@ import com.post.zybx.mapper.TbUserMapper;
 import com.post.zybx.service.TbUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -20,11 +21,19 @@ import java.util.List;
  */
 @Service
 public class TbUserServiceImpl extends ServiceImpl<TbUserMapper, TbUser> implements TbUserService {
-    private static final Logger logger = LoggerFactory.getLogger(TbUserServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(TbUserServiceImpl.class);
 
     @Resource
     private TbUserMapper tbUserMapper;
 
+    @Resource
+    private JdbcTemplate jdbcTemplate;
+
+
+    @Override
+    public void deleteAll() {
+        jdbcTemplate.execute("truncate table tb_user");
+    }
 
     @Override
     public List<TbUser> findAllList() {
@@ -47,7 +56,18 @@ public class TbUserServiceImpl extends ServiceImpl<TbUserMapper, TbUser> impleme
 
     @Override
     public int inertListVo(List<TbUser> users) {
-        boolean res = this.saveBatch(users);
-        return res ? 1 : 0;
+//        boolean res = this.saveBatch(users);
+        Integer integer = tbUserMapper.insertBatchSomeColumn(users);
+        return integer;
+    }
+
+    @Override
+    public void buildAlert() {
+        log.info("======================== 将上一次预警 status = 0 --> 1 ");
+        String updateSql = "update tb_user_alert tua set tua.status = '1' where tua.status = '0' ";
+        jdbcTemplate.update(updateSql);
+        log.info("======================== 开始调用存储过程生成预警数据 ------>");
+        jdbcTemplate.execute("call proc_alert_model_all()");
+        log.info("======================== 存储过程调用完成！ ");
     }
 }

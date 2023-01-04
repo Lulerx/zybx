@@ -41,8 +41,8 @@ public class TbUser {
     private String email;
     @ExcelProperty(value = "手机号码")
     private String phone;
-//    @ExcelProperty(value = "性别")
-    @ExcelIgnore
+    @ExcelProperty(value = "性别")
+//    @ExcelIgnore
     private String sex;
     @ExcelProperty(value = "投保人年龄")
     private Integer age;

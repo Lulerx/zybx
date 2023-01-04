@@ -55,14 +55,12 @@ public class UserAlertController {
      */
     @GetMapping("/search")
     public CommonResult searchList(CommonPage commonPage,
-                                   @RequestParam("phoneNo") String phoneNo ,
-                                   @RequestParam("email") String email ,
-                                   @RequestParam("cards") String cards ,
+                                   @RequestParam("treeValue") String treeValue ,
+                                   @RequestParam("status") Integer status ,
                                    @RequestParam("modelId") Integer modelId ){
         Map<String, Object> map = new HashMap<>();
-        map.put("phoneNo",phoneNo);
-        map.put("email",email);
-        map.put("cards",cards);
+        map.put("treeValue",treeValue);
+        map.put("status",status);
         map.put("modelId",modelId);
         Page<UserAlert> list = userAlertService.findPageByMap(commonPage, map);
         return new CommonResult(list, 0, "success");

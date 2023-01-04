@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * create by Luler on 2022/12/5 15:51
@@ -21,7 +22,7 @@ public class ExcelListener extends AnalysisEventListener<TbUser> {
     /**
      * 每隔100条存储数据库，然后清理list ，方便内存回收
      */
-    private static final int BATCH_COUNT = 100;
+    private static final int BATCH_COUNT = 1000;
     /**
      * 缓存的数据
      */
@@ -38,8 +39,7 @@ public class ExcelListener extends AnalysisEventListener<TbUser> {
     @Override
     public void invoke(TbUser tbUser, AnalysisContext analysisContext) {
 //        System.out.println("excel内容：" + tbUser);
-        log.info("=================== 开始读取 Excel 内容！");
-
+//        log.info("=================== 开始读取 Excel 内容！");
         cachedDataList.add(tbUser);
         // 达到BATCH_COUNT了，需要去存储一次数据库，防止数据几万条数据在内存，容易OOM
         if (cachedDataList.size() >= BATCH_COUNT) {
@@ -50,10 +50,13 @@ public class ExcelListener extends AnalysisEventListener<TbUser> {
     }
 
     //读取excel表头信息
-    /*@Override
+    @Override
     public void invokeHeadMap(Map<Integer, String> headMap, AnalysisContext context) {
-        System.out.println("表头：" + headMap);
-    }*/
+//        System.out.println("表头：" + headMap);
+        log.info("=====================开始清空表数据");
+        tbUserService.deleteAll();
+        log.info("=====================清空表数据完成，开始读取 Excel 内容！");
+    }
 
     //读取完之后执行
     @Override

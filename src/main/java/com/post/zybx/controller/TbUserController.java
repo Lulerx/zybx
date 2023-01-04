@@ -8,6 +8,7 @@ import com.post.zybx.dto.CommonResult;
 import com.post.zybx.dto.CommonPage;
 import com.post.zybx.listener.ExcelListener;
 import com.post.zybx.service.TbUserService;
+import com.post.zybx.service.UserAlertService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +16,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,6 +39,9 @@ public class TbUserController {
     @Autowired
     private TbUserService tbUserService;
 
+    @Resource
+    private UserAlertService userAlertService;
+
     @Value("${web.upload-path}")
     private String uploadPath;
 
@@ -44,8 +51,33 @@ public class TbUserController {
         return new CommonResult(pageVo, 0, "success");
     }
 
+
+    @GetMapping("/addBath")
+    public CommonResult addBath(){
+        long startTime = System.currentTimeMillis();
+
+        for (int j = 0; j < 10; j++) {
+            List<TbUser> list = new ArrayList<>();
+
+            for (int i = 0; i < 10000; i++) {
+                TbUser user = new TbUser();
+                user.setPhone("13023456100");
+                user.setOrderNum("76440000057"+ j+i);
+
+                list.add(user);
+            }
+
+        tbUserService.inertListVo(list);
+        }
+        long endTime = System.currentTimeMillis();
+        System.out.println("函数执行时间：" + (endTime - startTime) + "ms");
+        return CommonResult.success(null);
+
+    }
+
     @PostMapping("/fileUpload")
     public CommonResult upload(MultipartFile file) {
+        long startTime = System.currentTimeMillis();
         if (!file.isEmpty()) {
             //存储文件的路径 + 文件分隔符 （'/'）+ 文件名
             File filePath = new File(uploadPath + File.separator + file.getOriginalFilename());
@@ -64,6 +96,9 @@ public class TbUserController {
             EasyExcel.read(filePath, TbUser.class,new ExcelListener(tbUserService)).sheet().doRead();
 
             filePath.delete();
+            long endTime = System.currentTimeMillis();
+            System.out.println("函数执行时间：" + (endTime - startTime) + "ms");
+
             return CommonResult.success("success");
         }else {
             return new CommonResult(null, 500, "文件不存在");
@@ -98,6 +133,22 @@ public class TbUserController {
             map.put("message", "下载文件失败" + e.getMessage());
             response.getWriter().println(JSON.toJSONString(map));
         }
+    }
+
+
+    @PostMapping("/alertBuild")
+    public CommonResult alertBuild() {
+        long startTime = System.currentTimeMillis();
+        logger.info("===========开始生成预警数据");
+        //这里包括将预警状态0-->1，生成新的预警
+        tbUserService.buildAlert();
+        logger.info("============开始更新旧预警状态");
+        //这里是预警数据对碰，生成 status=2 的数据
+        userAlertService.alertCheck();
+        logger.info("============预警已生成！");
+        long endTime = System.currentTimeMillis();
+        System.out.println("生成预警总耗时：" + (endTime - startTime) + "ms");
+        return CommonResult.success(null);
     }
 
 

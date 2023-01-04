@@ -1,6 +1,5 @@
 package com.post.zybx.service.impl;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.post.zybx.dto.CommonPage;
 import com.post.zybx.service.AlertCountService;
 import com.post.zybx.utils.StringUtil;
@@ -35,7 +34,7 @@ public class AlertCountServiceImpl implements AlertCountService {
                 "not_check_alert_num," +
                 "check_alert_num " +
                 "from v_count_model limit ?,?";
-        List<Map<String, Object>> mapList = jdbcTemplate.queryForList(pageSql,page.getCurrent()-1,page.getSize());
+        List<Map<String, Object>> mapList = jdbcTemplate.queryForList(pageSql,(page.getCurrent()-1) * page.getSize(), page.getSize());
         page.setCount(total);
         page.setList(mapList);
         return page;
@@ -56,7 +55,7 @@ public class AlertCountServiceImpl implements AlertCountService {
                 "from " +
                 "   v_count_dept " +
                 "limit ?,?";
-        List<Map<String, Object>> mapList = jdbcTemplate.queryForList(pageSql,page.getCurrent()-1,page.getSize());
+        List<Map<String, Object>> mapList = jdbcTemplate.queryForList(pageSql,(page.getCurrent()-1) * page.getSize(), page.getSize());
         page.setCount(total);
         page.setList(mapList);
         return page;

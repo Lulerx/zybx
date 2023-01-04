@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.post.zybx.dto.AlertStatusConvert;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -64,4 +65,9 @@ public class UserAlert {
     @ExcelIgnore
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="Asia/Shanghai")
     private Date updateTime;
+    @ExcelProperty(value = "核销状态",converter = AlertStatusConvert.class)
+    private String status;
+    /*@ExcelProperty(value = "核销状态",converter = AlertStatusConvert.class)
+    @TableField(exist = false)
+    private String statusDtl;*/
 }

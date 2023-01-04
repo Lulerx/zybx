@@ -149,7 +149,7 @@
         });
 
 
-        //头工具栏事件
+        //表头工具栏事件
         table.on('toolbar(table_alert)', function (obj) {
             var checkStatus = table.checkStatus(obj.config.id); //获取选中行状态
             switch (obj.event) {
@@ -160,6 +160,7 @@
             }
         });
 
+        //搜索栏
         $("#search-btn").click(function(){
             var cityName = $('#cityName').val();
             var distName = $('#distName').val();
@@ -181,6 +182,7 @@
                 }
             });
         });
+
     });
 
 

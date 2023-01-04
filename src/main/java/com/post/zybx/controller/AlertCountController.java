@@ -3,6 +3,7 @@ package com.post.zybx.controller;
 import com.post.zybx.dto.CommonPage;
 import com.post.zybx.dto.CommonResult;
 import com.post.zybx.service.AlertCountService;
+import com.post.zybx.service.TbDeptService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +28,9 @@ public class AlertCountController {
 
     @Autowired
     private AlertCountService countService;
+
+    @Autowired
+    private TbDeptService tbDeptService;
 
     @GetMapping("/modelCount")
     public CommonResult modelCount(CommonPage page) {
@@ -48,7 +50,6 @@ public class AlertCountController {
 
     @GetMapping("/searchDeptCount")
     public CommonResult searchDeptCount(CommonPage page,
-                                        HttpServletRequest request,
                                         @RequestParam("cityName") String cityName,
                                         @RequestParam("distName") String distName,
                                         @RequestParam("modelId") int modelId) {
@@ -60,6 +61,13 @@ public class AlertCountController {
         CommonPage commonPage = countService.searchCountDeptPage(page, map);
 
         return new CommonResult(commonPage,0,"success");
+    }
+
+
+    @GetMapping("/treeDept")
+    public CommonResult TreeDept(){
+        List list = tbDeptService.getTreeDept();
+        return CommonResult.success(list);
     }
 
 }
