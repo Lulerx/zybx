@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="public/head :: head" th:with="title = '模型规则'"></head>
+<body>
+<div class="layui-layout layui-layout-admin">
+
+    <!--导航栏-->
+    <div th:replace="public/navbar :: header"></div>
+
+    <!-- 内容主体区域 -->
+    <div class="layui-body">
+
+        <div style="padding: 15px;">
+            <span class="layui-breadcrumb">
+              <a href="/">首页</a>
+              <a><cite>模型规则</cite></a>
+            </span>
+        </div>
+        <div style="margin: 0 0 0 3%">
+            <div class="layui-btn-container">
+<!--                <button type="button" class="layui-btn  layui-btn-normal" id="test8">选择Excel文件</button>-->
+<!--                <button type="button" class="layui-btn " id="test9">开始导入</button>-->
+<!--                <button type="button" class="layui-btn " id="export">导出文件</button>-->
+            </div>
+        </div>
+        <div style="margin: 0 3%;">
+            <table id="table_data" lay-filter="test"></table>
+
+        </div>
+
+    </div>
+
+    <!--底部-->
+    <div th:replace="public/footer :: footer"></div>
+
+</div>
+<script type="text/html" id="toolbarDemo">
+    <!--<div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
+    </div>-->
+</script>
+<script src="../static/layui/layui.js"></script>
+<script src="../static/js/jquery-3.3.1.min.js"></script>
+<script src="../static/js/public.js"></script>
+
+<script type="text/javascript" th:inline="none">
+
+    var table_data = [{
+        modelId: "1001",
+        modelName: "投保人手机号码相同",
+        modelDesc: "判断投保人使用的手机号码是否存在已有不同客户使用该手机号码"
+    },{
+        modelId: "1002",
+        modelName: "投保人电子邮箱相同",
+        modelDesc: "电子邮箱地址有不同客户使用"
+    },{
+        modelId: "1003",
+        modelName: "投保人年龄异常",
+        modelDesc: "职业为“内勤”时，男性年龄＞65 周岁或女性年龄＞60 周岁时，或，无论男女年龄<18周岁"
+    },{
+        modelId: "1004",
+        modelName: "投保人证件类型异常",
+        modelDesc: "（1）户口本\n" +
+            "证件类型为“户口本”时，证件号码须填写身份证号，年龄≥16 周岁,不允许使用“户口本”\n" +
+            "（2）出生证\n" +
+            "证件类型为出生证时，证件号码须为字母+9 位数字\n" +
+            "（3）护照\n" +
+            "证件类型为“护照”时，国籍不能为中国"
+    },{
+        modelId: "1005",
+        modelName: "投保人地址异常",
+        modelDesc: "（1）详细地址（街道）第一个字须为汉字；\n" +
+            "（2）详细地址（街道）仅允许包含特殊字符“-”、“#”；\n" +
+            "（3）详细地址（街道）不能包含“邮政储蓄”、“邮局”、“营业厅”、“邮政”等；\n" +
+            "（4）详细地址（街道）最后一个字必须是汉字，不能以“区”、委”“省”、“市”、“县”、“镇”、“乡”、“路” "
+    },{
+        modelId: "1006",
+        modelName: "投保人地址相同",
+        modelDesc: "相同的地址大于4"
+    }]
+
+    //JS
+    layui.use(['element', 'layer', 'util', 'table', 'upload'], function () {
+        var element = layui.element
+            , layer = layui.layer
+            , util = layui.util
+            , table = layui.table
+            , upload = layui.upload
+            , $ = layui.$;
+
+        //头部事件
+        util.event('lay-header-event', {
+            //左侧菜单事件
+            menuLeft: function (othis) {
+                layer.msg('展开左侧菜单的操作', {icon: 0});
+            }
+            , menuRight: function () {
+                layer.open({
+                    type: 1
+                    , content: '<div style="padding: 15px;">处理右侧面板的操作</div>'
+                    , area: ['260px', '100%']
+                    , offset: 'rt' //右上角
+                    , anim: 5
+                    , shadeClose: true
+                });
+            }
+        });
+
+
+        var ins1 = table.render({
+            elem: '#table_data'
+            , data: table_data
+            , toolbar: '#toolbarDemo'
+            , height: 550
+            , even: true
+            , cols: [[
+                {field: 'modelId',  title: '模型编号',width:120}
+                , {field: 'modelName',  title: '模型名称',width:200}
+                , {field: 'modelDesc', title: '规则说明',rowspan: 3}
+            ]]
+        });
+
+        //头工具栏事件
+        table.on('toolbar(table_alert)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id); //获取选中行状态
+            switch (obj.event) {
+                case 'getCheckData':
+                    var data = checkStatus.data;  //获取选中行数据
+                    layer.alert(JSON.stringify(data));
+                    break;
+            }
+            ;
+        });
+    });
+
+
+</script>
+</body>
+</html>
