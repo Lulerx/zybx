@@ -1,7 +1,7 @@
 package com.post.zybx.controller;
 
-import com.post.zybx.dto.CommonPage;
-import com.post.zybx.dto.CommonResult;
+import com.post.zybx.common.CommonPage;
+import com.post.zybx.common.CommonResult;
 import com.post.zybx.service.AlertCountService;
 import com.post.zybx.service.TbDeptService;
 import org.slf4j.Logger;

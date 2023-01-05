@@ -1,6 +1,6 @@
 package com.post.zybx.service.impl;
 
-import com.post.zybx.dto.CommonPage;
+import com.post.zybx.common.CommonPage;
 import com.post.zybx.service.AlertCountService;
 import com.post.zybx.utils.StringUtil;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -42,7 +42,7 @@ public class AlertCountServiceImpl implements AlertCountService {
 
     @Override
     public CommonPage countDeptPage(CommonPage page) {
-        String totalSql = "select count(1) from v_count_dept";
+        String totalSql = "select count(1) from tb_count_dept";
         Integer total = jdbcTemplate.queryForObject(totalSql, Integer.class);
 
         String pageSql = "select " +
@@ -53,7 +53,7 @@ public class AlertCountServiceImpl implements AlertCountService {
                 "not_check_alert_num," +
                 "check_alert_num " +
                 "from " +
-                "   v_count_dept " +
+                "   tb_count_dept " +
                 "limit ?,?";
         List<Map<String, Object>> mapList = jdbcTemplate.queryForList(pageSql,(page.getCurrent()-1) * page.getSize(), page.getSize());
         page.setCount(total);
@@ -63,7 +63,7 @@ public class AlertCountServiceImpl implements AlertCountService {
 
     @Override
     public CommonPage searchCountDeptPage(CommonPage page, Map map) {
-        String totalSql = "select count(1) from v_count_dept";
+        String totalSql = "select count(1) from tb_count_dept";
         Integer total = jdbcTemplate.queryForObject(totalSql, Integer.class);
 
         Integer modelId = (Integer) map.get("modelId");
@@ -71,30 +71,40 @@ public class AlertCountServiceImpl implements AlertCountService {
         String distName = (String) map.get("distName");
 
         StringBuilder pageSql = new StringBuilder();
-        pageSql.append("SELECT\n" +
+
+        pageSql.append("SELECT \n" +
                 "  td.city_name,\n" +
                 "  td.city_id,\n" +
                 "  td.dist_name,\n" +
                 "  td.dist_id,\n" +
-                "  count(tua.model_id) total_alert_num,\n" +
-                "  count(case tua.`status` when '0' then 1 END) last_alert_num,\n" +
-                "  count(case tua.`status` when '1' then 1 END) not_check_alert_num,\n" +
-                "  count(case tua.`status` when '2' then 1 END) check_alert_num\n" +
+                "  sum(t1.num) total_alert_num,\n" +
+                "  sum(case t1.`status` when '0' then t1.num else 0 END ) last_alert_num,\n" +
+                "  sum(case t1.`status` when '1' then t1.num else 0 END ) not_check_alert_num,\n" +
+                "  sum(case t1.`status` when '2' then t1.num else 0 END ) check_alert_num\n" +
+                "from (\n" +
+                "SELECT\n" +
+                "  ta.branch_id,\n" +
+                "  ta.`status`,\n" +
+                "  count(1) num\n" +
                 "FROM\n" +
-                "  tb_user_alert tua\n" +
-                "LEFT JOIN\n" +
-                "  tb_dept td ON td.branch_id = tua.branch_id\n" +
-                "WHERE 1=1 \n");
+                "    tb_user_alert ta\n" +
+                "  WHERE 1= 1");
 
         if (modelId != 0){
-            pageSql.append(" AND tua.model_id ='" + modelId +"'\n");
+            pageSql.append(" AND ta.model_id ='" + modelId +"'\n");
         }
 
         pageSql.append(" GROUP BY\n" +
+                "    ta.branch_id,\n" +
+                "    ta.`status`\n" +
+                ") t1\n" +
+                "LEFT JOIN\n" +
+                "  tb_dept td on td.branch_id = t1.branch_id\n" +
+                "GROUP BY\n" +
                 "  td.city_name,\n" +
                 "  td.city_id,\n" +
                 "  td.dist_id,\n" +
-                "  td.dist_name \n");
+                "  td.dist_name ");
         pageSql.append("having 1=1 \n");
         if (StringUtil.isNotEmpty(cityName)){
             pageSql.append("AND td.city_name like '%" + cityName + "%' \n");

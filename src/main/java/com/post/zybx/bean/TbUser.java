@@ -60,8 +60,8 @@ public class TbUser {
     private String address;
     @ExcelProperty(value = "承保日期")
     private String startDate;
-    @ExcelIgnore
+    /*@ExcelIgnore
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="Asia/Shanghai")
-    private Date updateTime;
+    private Date updateTime;*/
 
 }

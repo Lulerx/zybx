@@ -12,9 +12,9 @@
 
         <div style="padding: 15px;">
             <span class="layui-breadcrumb">
-              <a href="/">首页</a>
-              <a href="/demo/">演示</a>
-              <a><cite>导航元素</cite></a>
+              <a href="/indexShow/getPage">首页</a>
+<!--              <a href="/demo/">演示</a>-->
+              <a><cite>机构统计</cite></a>
             </span>
         </div>
 
@@ -117,6 +117,7 @@
             , toolbar: '#toolbarDemo'
             , height: 550
             , even: true
+            ,totalRow: true
             , parseData: function (res) { //res 即为原始返回的数据
                 return {
                     "code": res.status, //解析接口状态
@@ -139,12 +140,12 @@
 
             }
             , cols: [[
-                {field: 'city_name',  title: '地市'}
+                {field: 'city_name',  title: '地市' ,totalRowText: '合计行'}
                 , {field: 'dist_name',  title: '区县'}
-                , {field: 'total_alert_num',  title: '总预警数'}
-                , {field: 'last_alert_num', title: '最近一次预警数'}
-                , {field: 'check_alert_num',  title: '已核销预警数'}
-                , {field: 'not_check_alert_num',  title: '未核销的历史预警数'}
+                , {field: 'total_alert_num',  title: '总预警数' , totalRow: true}
+                , {field: 'last_alert_num', title: '最近一次预警数' , totalRow: true}
+                , {field: 'check_alert_num',  title: '已核销预警数' , totalRow: true}
+                , {field: 'not_check_alert_num',  title: '未核销的历史预警数' , totalRow: true}
             ]]
         });
 

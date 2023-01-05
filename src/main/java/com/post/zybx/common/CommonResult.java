@@ -1,4 +1,4 @@
-package com.post.zybx.dto;
+package com.post.zybx.common;
 
 /**
  * @author itle
@@ -6,6 +6,12 @@ package com.post.zybx.dto;
  * @date 2020/11/13
  */
 public class CommonResult<T> {
+
+    private static final Integer DEFAULT_SUCCESS_STATUS = 200;
+    private static final Integer DEFAULT_FAIL_STATUS = 500;
+    private static final String DEFAULT_SUCCESS_MSG = "成功";
+    private static final String DEFAULT_FAIL_MSG = "系统出错";
+
     private T Data;
     private Integer status;
     private String msg;
@@ -24,7 +30,7 @@ public class CommonResult<T> {
      * @return
      */
     public static <T> CommonResult success(T data){
-        return  new CommonResult(data,200,"成功");
+        return  new CommonResult(data,DEFAULT_SUCCESS_STATUS,DEFAULT_SUCCESS_MSG);
     }
 
     /**
@@ -34,7 +40,7 @@ public class CommonResult<T> {
      * @return
      */
     public static <T> CommonResult fail(T data){
-        return  new CommonResult(data,500,"系统出错");
+        return  new CommonResult(data,DEFAULT_FAIL_STATUS,DEFAULT_FAIL_MSG);
     }
 
     public T getData() {

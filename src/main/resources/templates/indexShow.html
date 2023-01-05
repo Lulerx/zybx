@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="public/head :: head" th:with="title = '首页'"></head>
+<style>
+    .tu{
+        display: flex;
+        /*居中对齐 每个项目两侧的间隔相等*/
+        justify-content:space-around;
+    }
+</style>
+<body>
+<div class="layui-layout layui-layout-admin">
+
+    <!--导航栏-->
+    <div th:replace="public/navbar :: header"></div>
+
+    <!-- 内容主体区域 -->
+    <div class="layui-body">
+
+        <div style="padding: 15px;">
+            <span class="layui-breadcrumb">
+              <a href="/">首页</a>
+              <a><cite>控制台</cite></a>
+            </span>
+        </div>
+        <div class="tu" style="margin: 0 0 0 3%;">
+            <div id="main" style="width: 45%;height:400px;"></div>
+            <div id="main2" style="width: 45%;height:400px;"></div>
+        </div>
+        <div style="margin: 0 3%;">
+            <table id="table_data" lay-filter="test"></table>
+
+        </div>
+
+
+
+    </div>
+
+    <!--底部-->
+    <div th:replace="public/footer :: footer"></div>
+
+</div>
+<script type="text/html" id="toolbarDemo">
+    <!--<div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
+    </div>-->
+</script>
+<script src="../static/layui/layui.js"></script>
+<script src="../static/js/jquery-3.3.1.min.js"></script>
+<script src="../static/js/public.js"></script>
+<script src="../static/js/echarts.js"></script>
+
+<script type="text/javascript" th:inline="none">
+
+    option = {
+        title: {
+            text: '预警类型统计',
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'item'
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'left'
+        },
+        series: [
+            {
+                name: '总数',
+                type: 'pie',
+                /*label: {
+                    show: false
+                },*/
+                radius: '50%',
+                data: [
+                    { value: 234, name: '新预警' },
+                    { value: 178, name: '未核销预警' },
+                    { value: 50, name: '已核销预警' }
+                ],
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+
+    var myChart = echarts.init(document.getElementById('main'));
+
+    
+    histogramOption = {
+        title: {
+            text: '模型数量统计',
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: [
+            {
+                type: 'category',
+                data: ['手机号模型', '电子邮件模型', '年龄异常模型', '证件异常模型', '地址异常模型', '地址相同模型', '疑似规避双录'],
+                axisTick: {
+                    alignWithLabel: true
+                }
+            }
+        ],
+        yAxis: {},
+        series: [
+            {
+                name: 'Direct',
+                type: 'bar',
+                barWidth: '60%',
+                data: [10, 52, 200, 334, 390, 330, 220]
+            }
+        ]
+    };
+
+    var histogram = echarts.init(document.getElementById('main2'));
+
+
+    var ptData = [];
+    $.ajax({
+        url: "/alertData/alertNum",
+        type: "GET",
+        success: function (res) {
+            list = res.data;
+            for(var i = 0; i < list.length; i++){
+                var status = list[i].status;
+                if (status == 0) status = '新预警';
+                if (status == 1) status = '未核销预警';
+                if (status == 2) status = '已核销预警';
+                var alert = {
+                    name: status,
+                    value: list[i].alert_num
+                };
+                ptData.push(alert);
+            }
+            option.series[0].data = ptData;
+            myChart.setOption(option);
+        }
+    });
+
+    var my_xAxis = [];
+    var my_series = [];
+    $.ajax({
+        url: "/alertData/modelNum",
+        type: "GET",
+        success: function (res) {
+            list = res.data;
+            for(var i = 0; i < list.length; i++){
+                my_xAxis.push(list[i].model_name);
+                my_series.push(list[i].alert_num);
+            }
+            histogramOption.xAxis[0].data = my_xAxis;
+            histogramOption.series[0].data = my_series;
+            histogram.setOption(histogramOption);
+            console.log(histogramOption)
+        }
+    });
+
+    //JS
+    layui.use(['element', 'layer', 'util', 'table', 'upload'], function () {
+        var element = layui.element
+            , layer = layui.layer
+            , util = layui.util
+            , table = layui.table
+            , upload = layui.upload
+            , $ = layui.$;
+
+        var ins1 = table.render({
+            elem: '#table_data'
+            , url: '/tbModel/list'
+            , toolbar: '#toolbarDemo'
+            , height: 550
+            , even: true
+            , parseData: function (res) { //res 即为原始返回的数据
+                return {
+                    "code": res.status, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.length, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+            }
+            , cols: [[
+                {field: 'modelId',  title: '模型编号',width:120}
+                , {field: 'modelName',  title: '模型名称',width:200}
+                , {field: 'readme', title: '规则说明',rowspan: 3}
+            ]]
+        });
+
+        //头工具栏事件
+        table.on('toolbar(table_alert)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id); //获取选中行状态
+            switch (obj.event) {
+                case 'getCheckData':
+                    var data = checkStatus.data;  //获取选中行数据
+                    layer.alert(JSON.stringify(data));
+                    break;
+            }
+            ;
+        });
+    });
+
+
+</script>
+</body>
+</html>

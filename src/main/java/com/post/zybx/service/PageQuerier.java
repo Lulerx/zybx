@@ -1,7 +1,7 @@
 package com.post.zybx.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.post.zybx.dto.CommonPage;
+import com.post.zybx.common.CommonPage;
 
 /**
  * create by Luler on 2022/12/29 15:04

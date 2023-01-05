@@ -7,7 +7,10 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.post.zybx.dto.AlertIdCardConvert;
+import com.post.zybx.dto.AlertPhoneConvert;
 import com.post.zybx.dto.AlertStatusConvert;
+import com.post.zybx.dto.DictionaryMap;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,7 +34,7 @@ public class UserAlert {
     private String orderNum;
     @ExcelProperty(value = "电子邮件地址")
     private String email;
-    @ExcelProperty(value = "手机号码")
+    @ExcelProperty(value = "手机号码" ,converter = AlertPhoneConvert.class)
     private String phone;
     @ExcelProperty(value = "性别")
     private String sex;
@@ -43,9 +46,10 @@ public class UserAlert {
     @ExcelProperty(value = "证件类型")
     @TableField("id_type")
     private String IDType;
-    @ExcelProperty(value = "证件号码")
+    @ExcelProperty(value = "证件号码" ,converter = AlertIdCardConvert.class)
     @TableField("id_card")
     private String IDCard;
+
     @ExcelProperty(value = "国籍")
     private String nationality;
     @ExcelProperty(value = "地址")
@@ -61,13 +65,23 @@ public class UserAlert {
     @ExcelProperty(value = "承保日期")
     private String startDate;
     @ExcelProperty(value = "模型编号")
+    @ExcelIgnore
     private Integer modelId;
+
+    @ExcelProperty(value = "模型名称")
+    @TableField(exist = false)
+    private String modelNAme;
+
     @ExcelIgnore
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="Asia/Shanghai")
     private Date updateTime;
     @ExcelProperty(value = "核销状态",converter = AlertStatusConvert.class)
     private String status;
-    /*@ExcelProperty(value = "核销状态",converter = AlertStatusConvert.class)
-    @TableField(exist = false)
-    private String statusDtl;*/
+
+
+
+    public String getModelNAme() {
+        String fieldDetail = DictionaryMap.getFieldDetail(getModelId() + "");
+        return fieldDetail;
+    }
 }

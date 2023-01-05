@@ -3,7 +3,7 @@ package com.post.zybx.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.post.zybx.bean.TbUser;
-import com.post.zybx.dto.CommonPage;
+import com.post.zybx.common.CommonPage;
 
 import java.util.List;
 

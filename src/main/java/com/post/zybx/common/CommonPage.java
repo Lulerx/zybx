@@ -1,4 +1,4 @@
-package com.post.zybx.dto;
+package com.post.zybx.common;
 
 import lombok.Data;
 

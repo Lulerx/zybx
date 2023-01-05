@@ -1,6 +1,6 @@
 package com.post.zybx.service;
 
-import com.post.zybx.dto.CommonPage;
+import com.post.zybx.common.CommonPage;
 
 import java.util.Map;
 

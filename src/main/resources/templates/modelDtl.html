@@ -12,7 +12,7 @@
 
         <div style="padding: 15px;">
             <span class="layui-breadcrumb">
-              <a href="/">首页</a>
+              <a href="/indexShow/getPage">首页</a>
               <a><cite>模型规则</cite></a>
             </span>
         </div>
@@ -45,40 +45,6 @@
 
 <script type="text/javascript" th:inline="none">
 
-    var table_data = [{
-        modelId: "1001",
-        modelName: "投保人手机号码相同",
-        modelDesc: "判断投保人使用的手机号码是否存在已有不同客户使用该手机号码"
-    },{
-        modelId: "1002",
-        modelName: "投保人电子邮箱相同",
-        modelDesc: "电子邮箱地址有不同客户使用"
-    },{
-        modelId: "1003",
-        modelName: "投保人年龄异常",
-        modelDesc: "职业为“内勤”时，男性年龄＞65 周岁或女性年龄＞60 周岁时，或，无论男女年龄<18周岁"
-    },{
-        modelId: "1004",
-        modelName: "投保人证件类型异常",
-        modelDesc: "（1）户口本\n" +
-            "证件类型为“户口本”时，证件号码须填写身份证号，年龄≥16 周岁,不允许使用“户口本”\n" +
-            "（2）出生证\n" +
-            "证件类型为出生证时，证件号码须为字母+9 位数字\n" +
-            "（3）护照\n" +
-            "证件类型为“护照”时，国籍不能为中国"
-    },{
-        modelId: "1005",
-        modelName: "投保人地址异常",
-        modelDesc: "（1）详细地址（街道）第一个字须为汉字；\n" +
-            "（2）详细地址（街道）仅允许包含特殊字符“-”、“#”；\n" +
-            "（3）详细地址（街道）不能包含“邮政储蓄”、“邮局”、“营业厅”、“邮政”等；\n" +
-            "（4）详细地址（街道）最后一个字必须是汉字，不能以“区”、委”“省”、“市”、“县”、“镇”、“乡”、“路” "
-    },{
-        modelId: "1006",
-        modelName: "投保人地址相同",
-        modelDesc: "相同的地址大于4"
-    }]
-
     //JS
     layui.use(['element', 'layer', 'util', 'table', 'upload'], function () {
         var element = layui.element
@@ -109,14 +75,22 @@
 
         var ins1 = table.render({
             elem: '#table_data'
-            , data: table_data
+            , url: '/tbModel/list'
             , toolbar: '#toolbarDemo'
             , height: 550
             , even: true
+            , parseData: function (res) { //res 即为原始返回的数据
+                return {
+                    "code": res.status, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.length, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+            }
             , cols: [[
                 {field: 'modelId',  title: '模型编号',width:120}
                 , {field: 'modelName',  title: '模型名称',width:200}
-                , {field: 'modelDesc', title: '规则说明',rowspan: 3}
+                , {field: 'readme', title: '规则说明',rowspan: 3}
             ]]
         });
 

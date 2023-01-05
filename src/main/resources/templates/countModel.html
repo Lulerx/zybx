@@ -12,7 +12,7 @@
 
         <div style="padding: 15px;">
             <span class="layui-breadcrumb">
-              <a href="/">首页</a>
+              <a href="/indexShow/getPage">首页</a>
               <a><cite>模型数据统计</cite></a>
             </span>
         </div>
@@ -99,6 +99,7 @@
             , toolbar: '#toolbarDemo'
             , height: 550
             , even: true
+            ,totalRow: true
             , parseData: function (res) { //res 即为原始返回的数据
                 return {
                     "code": res.status, //解析接口状态
@@ -121,11 +122,11 @@
 
             }
             , cols: [[
-                {field: 'model_name',  title: '模型类型'}
-                , {field: 'total_alert_num',  title: '总预警数'}
-                , {field: 'last_alert_num', title: '最近一次预警数'}
-                , {field: 'check_alert_num',  title: '已核销预警数'}
-                , {field: 'not_check_alert_num',  title: '未核销的历史预警数'}
+                {field: 'model_name',  title: '模型类型' ,totalRowText: '合计行'}
+                , {field: 'total_alert_num',  title: '总预警数', totalRow: true}
+                , {field: 'last_alert_num', title: '最近一次预警数' , totalRow: true}
+                , {field: 'check_alert_num',  title: '已核销预警数' , totalRow: true}
+                , {field: 'not_check_alert_num',  title: '未核销的历史预警数' , totalRow: true}
             ]]
         });
 

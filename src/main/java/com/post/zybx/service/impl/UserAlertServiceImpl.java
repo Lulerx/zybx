@@ -3,11 +3,11 @@ package com.post.zybx.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.post.zybx.bean.UserAlert;
-import com.post.zybx.dto.CommonPage;
+import com.post.zybx.common.CommonPage;
+import com.post.zybx.common.CommonResult;
 import com.post.zybx.mapper.UserAlertMapper;
 import com.post.zybx.service.PageQuerier;
 import com.post.zybx.service.UserAlertService;
-import com.post.zybx.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
@@ -52,7 +52,7 @@ public class UserAlertServiceImpl implements UserAlertService, PageQuerier<UserA
         Page<UserAlert> page = new Page<>(myPage.getCurrent(), myPage.getSize());
         QueryWrapper<UserAlert> wrapper = new QueryWrapper<>();
 //        wrapper.orderByAsc("model_id");
-        Page<UserAlert> userAlertPage = userAlertMapper.selectPage(page, wrapper);
+        Page<UserAlert> userAlertPage = userAlertMapper.selectPage(page, null);
         return userAlertPage;
     }
 
@@ -146,25 +146,45 @@ public class UserAlertServiceImpl implements UserAlertService, PageQuerier<UserA
             fetch += pageSize;
 
         }
+        //生成预警时，顺便将统计视图转为统计表
+        viewToTable();
 
+    }
+
+    @Override
+    public CommonResult findAlertNum() {
+        String sql = "SELECT tua.`status`,count(1) alert_num  from tb_user_alert tua GROUP BY tua.`status`";
+        List<Map<String, Object>> query = jdbcTemplate.queryForList(sql);
+        return CommonResult.success(query);
+    }
+
+    @Override
+    public CommonResult findModelNum() {
+        String sql = "SELECT\n" +
+                "  t1.model_id,\n" +
+                "  tm.model_name,\n" +
+                "  t1.alert_num\n" +
+                "FROM (\n" +
+                "  SELECT\n" +
+                "    tua.model_id,\n" +
+                "    count(1) alert_num\n" +
+                "  FROM\n" +
+                "    tb_user_alert tua\n" +
+                "  GROUP BY\n" +
+                "    tua.model_id\n" +
+                ") t1\n" +
+                "LEFT JOIN\n" +
+                "  tb_model tm on tm.model_id = t1.model_id";
+        List<Map<String, Object>> query = jdbcTemplate.queryForList(sql);
+        return CommonResult.success(query);
     }
 
 
     /**
-     * 将已核销的数据状态更新 status = 2
+     * 将已核销的数据状态批量更新 status = 2
      * @param list 核销的数据，每次最多1000条
      */
     private void updateChecked(List<Map<String, Object>> list) {
-        /*for (Map<String, Object> map : list) {
-            String order_num = (String) map.get("order_num");
-            Integer model_id = (Integer) map.get("model_id");
-
-            String updateSql = "update tb_user_alert tua set tua.status = '2' where tua.order_num = ? and tua.model_id = ?";
-
-//            jdbcTemplate.update(updateSql, order_num, model_id);
-
-
-        }*/
         logger.info("======================批量更新 status = 2 ");
         String updateSql = "update tb_user_alert tua set tua.status = '2' where tua.order_num = ? and tua.model_id = ?";
 
@@ -182,6 +202,29 @@ public class UserAlertServiceImpl implements UserAlertService, PageQuerier<UserA
         });
 
     }
+
+
+    /**
+     * 将机构统计视图插入统计表中（从表中查询数据会快很多）
+     */
+    private void viewToTable(){
+        String sql = "INSERT INTO tb_count_dept (\n" +
+                "  city_name,\n" +
+                "  city_id,\n" +
+                "  dist_name,\n" +
+                "  dist_id,\n" +
+                "  total_alert_num,\n" +
+                "  last_alert_num,\n" +
+                "  not_check_alert_num,\n" +
+                "  check_alert_num\n" +
+                ") SELECT\n" +
+                "  *\n" +
+                "FROM\n" +
+                "  v_count_dept\n";
+        jdbcTemplate.update(sql);
+    }
+
+
 
 
 }

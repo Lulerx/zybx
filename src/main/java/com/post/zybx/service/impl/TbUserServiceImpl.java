@@ -3,7 +3,7 @@ package com.post.zybx.service.impl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.post.zybx.bean.TbUser;
-import com.post.zybx.dto.CommonPage;
+import com.post.zybx.common.CommonPage;
 import com.post.zybx.mapper.TbUserMapper;
 import com.post.zybx.service.TbUserService;
 import org.slf4j.Logger;

@@ -3,8 +3,8 @@ package com.post.zybx.controller;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.post.zybx.bean.UserAlert;
-import com.post.zybx.dto.CommonResult;
-import com.post.zybx.dto.CommonPage;
+import com.post.zybx.common.CommonResult;
+import com.post.zybx.common.CommonPage;
 import com.post.zybx.service.PageQuerier;
 import com.post.zybx.service.UserAlertService;
 import com.post.zybx.service.impl.ExcelExporter;
@@ -90,6 +90,19 @@ public class UserAlertController {
             response.getWriter().println(JSON.toJSONString(map));
         }
 
+    }
+
+
+    @GetMapping("/alertNum")
+    public CommonResult getAlertNum() {
+        CommonResult alertNum = userAlertService.findAlertNum();
+        return alertNum;
+    }
+
+    @GetMapping("/modelNum")
+    public CommonResult getModelNum() {
+        CommonResult commonResult = userAlertService.findModelNum();
+        return commonResult;
     }
 
 

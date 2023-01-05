@@ -6,7 +6,7 @@ import com.alibaba.excel.support.ExcelTypeEnum;
 import com.alibaba.excel.write.builder.ExcelWriterBuilder;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.post.zybx.dto.CommonPage;
+import com.post.zybx.common.CommonPage;
 import com.post.zybx.service.PageQuerier;
 
 import javax.servlet.http.HttpServletResponse;

@@ -22,7 +22,7 @@ public class ExcelListener extends AnalysisEventListener<TbUser> {
     /**
      * 每隔100条存储数据库，然后清理list ，方便内存回收
      */
-    private static final int BATCH_COUNT = 1000;
+    private static final int BATCH_COUNT = 2000;
     /**
      * 缓存的数据
      */
