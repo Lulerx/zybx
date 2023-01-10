@@ -5,15 +5,15 @@ import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * create by Luler on 2022/12/26 16:19
  *
  * @description 分页插件拦截器配置
  */
-@Configuration
+@SpringBootConfiguration
 @MapperScan("com.post.zybx.mapper")
 public class MybatisPlusConfig {
     @Bean

@@ -12,11 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class BaseController {
 
-    /*@RequestMapping(value = "/schoolhelp")
+    @RequestMapping(value = "/")
     public String index(){
-        return "login";
+        return "indexShow";
     }
-*/
     /**
      * 用于a标签超链接跳转另一个页面
      * @param page

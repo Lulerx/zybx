@@ -147,6 +147,7 @@ public class UserAlertServiceImpl implements UserAlertService, PageQuerier<UserA
 
         }
         //生成预警时，顺便将统计视图转为统计表
+        logger.info("================= 核销状态更新完成，开始转换统计表");
         viewToTable();
 
     }
@@ -192,7 +193,7 @@ public class UserAlertServiceImpl implements UserAlertService, PageQuerier<UserA
             @Override
             public void setValues(PreparedStatement preparedStatement, int i) throws SQLException {
 
-                preparedStatement.setString(1, (String)list.get(i).get("order_num"));
+                preparedStatement.setString(1, list.get(i).get("order_num")+"");
                 preparedStatement.setInt(2, (Integer)list.get(i).get("model_id"));
             }
             @Override
@@ -208,6 +209,9 @@ public class UserAlertServiceImpl implements UserAlertService, PageQuerier<UserA
      * 将机构统计视图插入统计表中（从表中查询数据会快很多）
      */
     private void viewToTable(){
+        String delSql = "truncate table tb_count_dept";
+        jdbcTemplate.execute(delSql);
+
         String sql = "INSERT INTO tb_count_dept (\n" +
                 "  city_name,\n" +
                 "  city_id,\n" +

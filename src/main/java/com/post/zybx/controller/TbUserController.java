@@ -21,9 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -45,6 +43,11 @@ public class TbUserController {
     @Value("${web.upload-path}")
     private String uploadPath;
 
+    /**
+     * 获取分页列表
+     * @param commonPage
+     * @return
+     */
     @GetMapping("/list")
     public CommonResult list(CommonPage commonPage){
         Page<TbUser> pageVo = tbUserService.findPageVo(commonPage);
@@ -52,29 +55,11 @@ public class TbUserController {
     }
 
 
-    @GetMapping("/addBath")
-    public CommonResult addBath(){
-        long startTime = System.currentTimeMillis();
-
-        for (int j = 0; j < 10; j++) {
-            List<TbUser> list = new ArrayList<>();
-
-            for (int i = 0; i < 10000; i++) {
-                TbUser user = new TbUser();
-                user.setPhone("13023456100");
-                user.setOrderNum("76440000057"+ j+i);
-
-                list.add(user);
-            }
-
-        tbUserService.inertListVo(list);
-        }
-        long endTime = System.currentTimeMillis();
-        System.out.println("函数执行时间：" + (endTime - startTime) + "ms");
-        return CommonResult.success(null);
-
-    }
-
+    /**
+     * 文件上传
+     * @param file
+     * @return
+     */
     @PostMapping("/fileUpload")
     public CommonResult upload(MultipartFile file) {
         long startTime = System.currentTimeMillis();
@@ -136,6 +121,13 @@ public class TbUserController {
     }
 
 
+    /**
+     * 生成预警的操作请求，总体操作包括：
+     *      1.将上一次预警状态 0 变成旧预警（状态 = 1）
+     *      2.将状态 = 0 和状态 = 1 的预警数据对碰，旧预警不存在于新预警中，则更新状态 = 2
+     *      3.顺便将机构统计视图插入到统计表
+     * @return
+     */
     @PostMapping("/alertBuild")
     public CommonResult alertBuild() {
         long startTime = System.currentTimeMillis();
@@ -143,7 +135,7 @@ public class TbUserController {
         //这里包括将预警状态0-->1，生成新的预警
         tbUserService.buildAlert();
         logger.info("============开始更新旧预警状态");
-        //这里是预警数据对碰，生成 status=2 的数据
+        //预警数据对碰，生成 status=2 的预警核销数据
         userAlertService.alertCheck();
         logger.info("============预警已生成！");
         long endTime = System.currentTimeMillis();

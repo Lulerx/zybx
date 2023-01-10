@@ -16,6 +16,10 @@ function GetUrlRelativePath() {
 $(document).ready(function () {
     var url = GetUrlRelativePath();
     var patt1 = new RegExp(url);
+    if (url.length < 5){
+        $("#indexShow").addClass("layui-this");
+        return;
+    }
     $(document.body).find('a').each(function (i, obj) {
         var str = $(obj).attr('href');
         if (patt1.test(str)) {

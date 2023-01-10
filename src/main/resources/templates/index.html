@@ -52,7 +52,7 @@
         }, function(){
             layer.msg('正在执行，请耐心等待~', {icon: 6,offset: '100px'});
             //Loading
-            var index = layer.load(1, {shade: false}); //0代表加载的风格，支持0-2
+            var index = layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
             $.ajax({
                 url: "/tbUser/alertBuild",
                 type: "POST",
@@ -106,7 +106,7 @@
             , accept: "file"
             //,multiple: true //多个文件上传
             ,before: function(obj){     //在 choose 回调之后、done/error 回调之前触发
-                layer.load(1, {shade: false}); //上传loading
+                layer.load(0, {shade: false}); //上传loading
             }
             , done: function (res) {
                 if (res.status == 200) {
