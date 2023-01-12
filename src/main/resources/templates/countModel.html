@@ -128,6 +128,16 @@
                 , {field: 'check_alert_num',  title: '已核销预警数' , totalRow: true}
                 , {field: 'not_check_alert_num',  title: '未核销的历史预警数' , totalRow: true}
             ]]
+            //统计去除小数点
+            , done: function(res, curr, count){
+                var divArr = $(".layui-table-total div.layui-table-cell");
+                $.each(divArr,function (index,item) {
+                    var _div = $(item);
+                    var content = _div.html();
+                    content = content.replace(".00","");
+                    _div.html(content);
+                });
+            }
         });
 
         //头工具栏事件

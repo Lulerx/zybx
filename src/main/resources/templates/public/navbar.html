@@ -8,18 +8,22 @@
 <!--        <div class="layui-logo layui-hide-xs layui-bg-black">中邮保险模型分析</div>-->
         <!-- 头部区域（可配合layui 已有的水平导航） -->
 
-        <ul class="layui-nav layui-layout-right">
-            <li class="layui-nav-item layui-hide layui-show-md-inline-block">
-                <a href="javascript:;">
-<!--                    <img src="//tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" class="layui-nav-img">-->
-                    欢迎 Admin
-                </a>
-                <dl class="layui-nav-child">
-                    <!--<dd><a href="">Your Profile</a></dd>
-                    <dd><a href="">Settings</a></dd>-->
-                    <dd><a href="">Sign out</a></dd>
-                </dl>
-            </li>
+        <ul class="layui-nav layui-layout-right" style="background-color: transparent!important;">
+            <span th:if="${session.username}!=null">
+                <li class="layui-nav-item layui-hide layui-show-md-inline-block">
+                    <a href="javascript:;">
+    <!--                    <img src="//tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" class="layui-nav-img">-->
+                        欢迎 [[${session.username}]]
+                    </a>
+                    <input id="login-username" th:value="${session.username}" hidden>
+                    <input id="login-date" th:value="${session.today}" hidden>
+                    <dl class="layui-nav-child">
+                        <!--<dd><a href="">Your Profile</a></dd>
+                        <dd><a href="">Settings</a></dd>-->
+                        <dd><a href="/userLogin/logout">退出登录</a></dd>
+                    </dl>
+                </li>
+            </span>
             <!--<li class="layui-nav-item" lay-header-event="menuRight" lay-unselect>
                 <a href="javascript:;">
                     <i class="layui-icon layui-icon-more-vertical"></i>

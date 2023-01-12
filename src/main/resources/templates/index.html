@@ -10,6 +10,7 @@
     <!-- 内容主体区域 -->
     <div class="layui-body">
 
+
         <div style="padding: 15px;">
             <span class="layui-breadcrumb">
               <a href="/indexShow/getPage">首页</a>
@@ -128,7 +129,8 @@
             elem: '#table_data'
             , url: '/tbUser/list'
             , toolbar: '#toolbarDemo'
-            , height: 600
+            ,defaultToolbar: ['filter']
+            , height: 650
             , even: true
             , parseData: function (res) { //res 即为原始返回的数据
                 return {
@@ -138,6 +140,7 @@
                     "data": res.data.records //解析数据列表
                 };
             }
+            , limit: 20
             , limits: [10, 20, 50, 100, 300]
             , request: {
                 pageName: 'current' //页码的参数名称，默认：page
@@ -168,6 +171,7 @@
                 , {field: 'startDate', width: 135, title: '承保时间', sort: true}
                 // , {field: 'updateTime', width: 180, title: '最后执行时间', sort: true}
             ]]
+
         });
 
         //将上述表格示例导出为 csv 文件
