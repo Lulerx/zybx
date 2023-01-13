@@ -29,7 +29,7 @@ $(document).ready(function () {
 
     var username = $("#login-username").val();
     var today = $("#login-date").val();
-    watermark({watermark_txt0:username+today, watermark_txt1:' ',watermark_txt2:' '});
+    watermark({watermark_txt0:username+' '+today, watermark_txt1:' ',watermark_txt2:' '});
 });
 
 

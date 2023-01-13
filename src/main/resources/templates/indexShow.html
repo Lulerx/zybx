@@ -27,8 +27,8 @@
             </span>
         </div>
         <div class="tu" style="margin: 0 0 0 3%;">
-            <div id="main" style="width: 45%;height:400px;"></div>
-            <div id="main2" style="width: 45%;height:400px;"></div>
+            <div id="main" style="width: 48%;height:400px;"></div>
+            <div id="main2" style="width: 48%;height:400px;"></div>
         </div>
         <div style="margin: 0 3%;">
             <table id="table_data" lay-filter="test"></table>
@@ -112,7 +112,8 @@
                 data: ['手机号模型', '电子邮件模型', '年龄异常模型', '证件异常模型', '地址异常模型', '地址相同模型', '疑似规避双录'],
                 axisTick: {
                     alignWithLabel: true
-                }
+                },
+                axisLabel: { interval: 0, rotate: 30 }
             }
         ],
         yAxis: {},

@@ -4,10 +4,12 @@ import com.post.zybx.bean.TbLogin;
 import com.post.zybx.common.CommonResult;
 import com.post.zybx.service.TbLoginService;
 import com.post.zybx.utils.DateUtil;
+import com.post.zybx.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +31,9 @@ public class UserLoginController {
     @Autowired
     @Qualifier("tbLoginService")
     private TbLoginService loginService;
+
+    @Value("${reg.password}")
+    private String regPwd;
 
     @PostMapping("/reg")
     public CommonResult register(@RequestBody TbLogin login){
@@ -61,6 +66,18 @@ public class UserLoginController {
             logger.error("================退出登录发生异常，{}", e.getMessage());
         }
         return new CommonResult(null, 200, "退出成功");
+    }
+
+    @PostMapping(value = "/regVerify" )
+    public CommonResult regVerify(@RequestParam String password){
+        if (StringUtil.isEmpty(password)){
+            return new CommonResult(null, 500, "口令不能为空");
+        }
+        if (password.equals(regPwd)){
+            return new CommonResult(null, 200, "口令验证成功");
+        }else {
+            return new CommonResult(null, 500, "请输入正确的口令");
+        }
     }
 
 }
